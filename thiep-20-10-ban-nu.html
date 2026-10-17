@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiệp Chúc Mừng 20/10 - Dành Tặng Các Bạn Nữ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;700&family=Mali:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg1:#ffe4e6; --bg2:#fed7aa; --bg3:#fecdd3; --bg4:#fda4af;
+    --msg-font:'Quicksand',sans-serif; --msg-size:16px; --msg-color:#4b5563;
+    --msg-align:justify; --msg-weight:500; --msg-style:normal;
+    --title-font:'Dancing Script',cursive; --title-size:36px; --title-color:#be123c;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    color-scheme:light dark;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){ --bg1:#4c1d24; --bg2:#7c2d12; --bg3:#4c0519; --bg4:#500724; }
+  }
+  :root[data-theme="dark"]{ --bg1:#4c1d24; --bg2:#7c2d12; --bg3:#4c0519; --bg4:#500724; }
+  html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+  body{
+    font-family:'Quicksand',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    min-height:100vh;
+    background:radial-gradient(circle at top,var(--bg1) 0%,var(--bg2) 35%,var(--bg3) 70%,var(--bg4) 100%);
+    color:#374151;overflow-x:hidden;position:relative;
+  }
+
+  #petalCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;}
+
+  /* ===== DẢI CHỮ CHẠY ===== */
+  .marquee-wrap{position:relative;width:100%;overflow:hidden;}
+  .marquee-track{display:flex;width:max-content;}
+  .marquee-track:hover{animation-play-state:paused;}
+  .marquee-content{display:flex;align-items:center;gap:32px;white-space:nowrap;padding:0 16px;}
+  .marquee-item{display:inline-flex;align-items:center;gap:8px;}
+  @keyframes marqueeRun{0%{transform:translateX(0%);}100%{transform:translateX(-50%);}}
+  @keyframes gradientShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+
+  #topBanner{
+    background:linear-gradient(90deg,#e11d48,#db2777,#f59e0b,#e11d48);
+    background-size:300% 100%;animation:gradientShift 8s ease infinite;
+    color:#fff;padding:10px 0;box-shadow:0 4px 15px rgba(225,29,72,.25);
+    z-index:30;position:relative;border-bottom:1px solid rgba(255,255,255,.3);
+  }
+  #topTrack{animation:marqueeRun 26s linear infinite;}
+  #topMarqueeA,#topMarqueeB{font-size:14px;font-weight:700;letter-spacing:.3px;text-shadow:0 1px 3px rgba(0,0,0,.2);}
+
+  .container{max-width:900px;margin:0 auto;padding:24px 16px 60px;position:relative;z-index:20;}
+  header{text-align:center;margin-bottom:22px;}
+  .sub-badge{display:inline-block;padding:6px 18px;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);
+    border-radius:9999px;font-size:14px;font-weight:700;color:#e11d48;border:1px solid #fecdd3;
+    box-shadow:0 4px 15px rgba(225,29,72,.12);margin-bottom:12px;}
+  h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(26px,5vw,42px);color:#9f1239;font-weight:700;
+    letter-spacing:-.5px;line-height:1.25;text-shadow:0 2px 10px rgba(159,18,57,.15);margin-bottom:8px;}
+  .date-highlight{display:inline-block;color:#e11d48;background:-webkit-linear-gradient(45deg,#e11d48,#d97706);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  p.subtitle{font-size:15px;color:#6b7280;font-weight:500;}
+
+  .toolbar{display:flex;justify-content:center;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;font-size:13px;
+    font-weight:600;cursor:pointer;border:none;transition:all .25s ease;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .btn-music{background:#fff;color:#be123c;border:1px solid #fecdd3;}
+  .btn-music.playing{background:#be123c;color:#fff;animation:pulse 1.8s infinite;}
+  .btn-gift{background:linear-gradient(135deg,#f43f5e,#fb7185);color:#fff;}
+  .btn-gift:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(244,63,94,.35);}
+  .btn-replay{background:#fff1f2;color:#be123c;border:1px solid #fecdd3;}
+  .btn-replay:hover{background:#ffe4e6;}
+  .btn-auto{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;}
+  .btn-auto.on{background:#9a3412;color:#fff;}
+  .btn-custom{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;}
+  .btn-custom.active{background:#15803d;color:#fff;}
+
+  .card-wrapper{background:rgba(255,255,255,.96);border-radius:28px;
+    box-shadow:0 20px 40px -15px rgba(225,29,72,.2),0 0 0 1px rgba(254,205,211,.6);
+    padding:34px 28px;position:relative;margin-bottom:30px;backdrop-filter:blur(12px);}
+  .envelope-box{border:2px dashed #f43f5e;border-radius:20px;padding:26px 22px;
+    background:linear-gradient(180deg,#fffafb 0%,#fff1f2 100%);position:relative;}
+  .corner-decor{position:absolute;font-size:22px;opacity:.65;}
+  .corner-tl{top:10px;left:12px;} .corner-tr{top:10px;right:12px;}
+  .corner-bl{bottom:10px;left:12px;} .corner-br{bottom:10px;right:12px;}
+
+  .recipient-title{font-family:var(--title-font);font-size:min(var(--title-size),9vw);color:var(--title-color);
+    text-align:center;margin-bottom:16px;}
+
+  .typing-status-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+    padding-bottom:8px;border-bottom:1px solid #fecdd3;font-size:12px;color:#be123c;font-weight:600;}
+  .typing-indicator{display:inline-block;width:8px;height:8px;background:#f43f5e;border-radius:50%;
+    margin-right:6px;animation:pulse 1s infinite;}
+
+  .typewriter-text{font-family:var(--msg-font);font-size:var(--msg-size);line-height:1.85;color:var(--msg-color);
+    text-align:var(--msg-align);font-weight:var(--msg-weight);font-style:var(--msg-style);
+    white-space:pre-line;margin-bottom:18px;min-height:90px;}
+  .blinking-cursor{display:inline-block;width:2px;height:1.2em;background:#e11d48;margin-left:2px;
+    vertical-align:middle;animation:cursorBlink .9s infinite;}
+  @keyframes cursorBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+  .poem-box{background:rgba(254,226,226,.55);border-left:4px solid #f43f5e;padding:16px 20px;
+    border-radius:0 16px 16px 0;margin:18px 0;font-style:italic;color:#881337;line-height:1.8;
+    font-size:15px;font-family:var(--msg-font);}
+  .poem-box div{margin-bottom:4px;}
+  .poem-wish{margin-top:6px;font-weight:700;color:#be123c;}
+
+  .signature-area{text-align:right;margin-top:24px;}
+  .signature-role{font-size:13px;color:#9ca3af;font-style:italic;}
+  .signature-name{font-family:var(--title-font);font-size:calc(var(--title-size) * .72);color:var(--title-color);
+    font-weight:700;margin-top:4px;}
+
+  .lucky-section{margin-top:32px;text-align:center;}
+  .lucky-title{font-size:16px;font-weight:700;color:#9f1239;margin-bottom:14px;display:flex;align-items:center;
+    justify-content:center;gap:8px;}
+  .lucky-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+  .lucky-card{background:#fff;border:1px solid #fecdd3;border-radius:16px;padding:14px 10px;cursor:pointer;
+    transition:all .25s ease;box-shadow:0 4px 10px rgba(0,0,0,.04);user-select:none;}
+  .lucky-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(225,29,72,.15);border-color:#f43f5e;}
+  .lucky-icon{font-size:26px;margin-bottom:6px;}
+  .lucky-text{font-size:13px;font-weight:600;color:#4b5563;}
+  .lucky-reveal{font-size:12px;color:#be123c;font-weight:700;margin-top:6px;display:none;animation:fadeIn .4s ease;}
+  .lucky-card.revealed .lucky-reveal{display:block;}
+
+  .gift-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);
+    backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+  .gift-modal.active{display:flex;}
+  .modal-content{background:#fff;border-radius:28px;max-width:440px;width:100%;padding:30px 22px;text-align:center;
+    box-shadow:0 25px 50px -12px rgba(0,0,0,.25);position:relative;animation:popIn .35s cubic-bezier(.175,.885,.32,1.275);}
+  .modal-flower-icon{font-size:60px;margin-bottom:12px;animation:bounce 1.5s infinite;}
+  .modal-title{font-family:'Playfair Display',Georgia,serif;font-size:22px;color:#be123c;margin-bottom:10px;}
+  .modal-desc{font-size:14px;color:#4b5563;line-height:1.6;margin-bottom:20px;}
+  .modal-close-btn{background:#be123c;color:#fff;border:none;padding:10px 26px;border-radius:50px;
+    font-weight:700;cursor:pointer;font-size:14px;}
+
+  footer{text-align:center;margin-top:36px;font-size:13px;color:#881337;opacity:.85;}
+
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes popIn{from{opacity:0;transform:scale(.85);}to{opacity:1;transform:scale(1);}}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+  /* ===== CỔNG MÃ QR ===== */
+  #qrGate{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;
+    padding:20px;background:radial-gradient(circle at top,#ffe4e6 0%,#fed7aa 35%,#fecdd3 70%,#fda4af 100%);
+    transition:opacity .6s ease, visibility .6s ease;}
+  #qrGate.gate-hide{opacity:0;visibility:hidden;pointer-events:none;}
+  .qr-card{background:rgba(255,255,255,.97);border-radius:28px;padding:36px 28px;max-width:380px;width:100%;
+    text-align:center;box-shadow:0 20px 50px -15px rgba(225,29,72,.35);border:2px dashed #f43f5e;cursor:pointer;
+    transition:transform .25s ease;}
+  .qr-card:hover{transform:translateY(-4px);}
+  .qr-card:active{transform:scale(.98);}
+  .qr-badge{font-size:13px;font-weight:700;color:#e11d48;background:#fff1f2;border:1px solid #fecdd3;
+    border-radius:9999px;padding:5px 14px;display:inline-block;margin-bottom:14px;}
+  .qr-title{font-family:'Playfair Display',Georgia,serif;font-size:22px;color:#9f1239;margin-bottom:6px;}
+  .qr-sub{font-size:13px;color:#6b7280;margin-bottom:18px;}
+  .qr-box{width:220px;height:220px;max-width:100%;margin:0 auto 18px;border-radius:18px;background:#fff;
+    border:1px solid #fecdd3;display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow:0 8px 24px rgba(225,29,72,.15);position:relative;}
+  #qrRender{display:flex;align-items:center;justify-content:center;}
+  #qrRender canvas,#qrRender img{width:86%!important;height:86%!important;border-radius:10px;}
+  .qr-fallback{font-size:58px;}
+  .qr-ring{position:absolute;inset:-6px;border-radius:22px;border:2px solid #fb7185;opacity:.6;
+    animation:qrPulse 2s ease infinite;}
+  @keyframes qrPulse{0%,100%{transform:scale(1);opacity:.6;}50%{transform:scale(1.04);opacity:.15;}}
+  .qr-open-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f43f5e,#fb7185);
+    color:#fff;border:none;padding:11px 26px;border-radius:50px;font-weight:700;font-size:14px;cursor:pointer;
+    box-shadow:0 8px 18px rgba(244,63,94,.35);}
+  .qr-hint{margin-top:12px;font-size:12px;color:#9ca3af;}
+
+  /* ===== BẢNG TÙY CHỈNH CHỮ ===== */
+  .custom-panel{display:none;background:rgba(255,255,255,.97);border-radius:24px;padding:22px;margin-bottom:22px;
+    border:1px solid #fecdd3;box-shadow:0 16px 36px -14px rgba(225,29,72,.25);}
+  .custom-panel.open{display:block;animation:fadeIn .3s ease;}
+  .cp-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:8px;}
+  .cp-head h3{font-size:18px;color:#9f1239;}
+  .cp-hint{font-size:12px;color:#9ca3af;}
+  .cp-section{margin-top:18px;padding-top:14px;border-top:1px dashed #fecdd3;}
+  .cp-section h4{font-size:14px;color:#be123c;margin-bottom:12px;}
+  .cp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 14px;}
+  .cp-field.full{grid-column:1/-1;}
+  .cp-field label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#9f1239;margin-bottom:5px;}
+  .cp-val{color:#6b7280;font-weight:600;}
+  .cp-field input[type="text"],.cp-field textarea,.cp-field select{width:100%;padding:9px 12px;border:1px solid #fecdd3;
+    border-radius:12px;font:inherit;font-size:14px;color:#374151;background:#fff;outline:none;}
+  .cp-field textarea{resize:vertical;line-height:1.5;}
+  .cp-field input:focus,.cp-field textarea:focus,.cp-field select:focus{border-color:#f43f5e;
+    box-shadow:0 0 0 3px rgba(244,63,94,.15);}
+  .cp-field input[type="range"]{width:100%;accent-color:#be123c;}
+  .cp-field input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #fecdd3;border-radius:12px;
+    background:#fff;cursor:pointer;}
+  .cp-check{display:flex;gap:16px;align-items:center;height:38px;}
+  .cp-check label{display:inline-flex;align-items:center;gap:6px;font-size:13px;margin:0;cursor:pointer;}
+  .cp-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+  .cp-btn{padding:9px 18px;border-radius:50px;border:1px solid #fecdd3;background:#fff1f2;color:#be123c;
+    font-weight:700;font-size:13px;cursor:pointer;}
+  .cp-btn.primary{background:#be123c;color:#fff;border-color:#be123c;}
+  .cp-btn.danger{background:#fff;color:#6b7280;}
+
+  @media (max-width:640px){
+    .card-wrapper{padding:22px 14px;} .envelope-box{padding:18px 12px;}
+    .marquee-content{gap:20px;font-size:13px;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== CỔNG MÃ QR MỞ THIỆP ===== -->
+  <div id="qrGate">
+    <div class="qr-card" onclick="openCard()">
+      <div class="qr-badge">💐 Thiệp 20/10 Dành Tặng Phái Đẹp</div>
+      <div class="qr-title">Một Lời Chúc Đang Chờ Bạn</div>
+      <div class="qr-sub">Quét mã QR bằng điện thoại khác, hoặc chạm vào đây để mở thiệp</div>
+      <div class="qr-box" id="qrBox">
+        <div class="qr-ring"></div>
+        <div id="qrRender" aria-label="Mã QR mở thiệp chúc mừng 20/10"></div>
+      </div>
+      <button class="qr-open-btn" onclick="event.stopPropagation(); openCard();">💌 Mở Lời Chúc Ngay</button>
+      <div class="qr-hint">Lời chúc sẽ tự chạy chữ và nhạc chill sẽ bật ngay sau khi mở</div>
+    </div>
+  </div>
+
+  <div id="topBanner" class="marquee-wrap">
+    <div class="marquee-track" id="topTrack">
+      <div class="marquee-content" id="topMarqueeA"></div>
+      <div class="marquee-content" id="topMarqueeB" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <canvas id="petalCanvas"></canvas>
+
+  <div class="container">
+    <header>
+      <div class="sub-badge" id="hdrBadge"></div>
+      <h1><span id="h1Title"></span> <span class="date-highlight" id="h1Date"></span></h1>
+      <p class="subtitle" id="hdrSub"></p>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn btn-music" id="musicBtn" onclick="toggleMusic()">
+        <span>🎵</span><span id="musicText">Bật Nhạc Chill</span>
+      </button>
+      <button class="btn btn-gift" onclick="openGiftModal()">
+        <span>🎁</span><span>Nhận Bó Hoa Bất Ngờ</span>
+      </button>
+      <button class="btn btn-replay" onclick="replayNow()">
+        <span>✍️</span><span>Chạy Lại Chữ</span>
+      </button>
+      <button class="btn btn-auto on" id="autoBtn" onclick="toggleAutoplay()">
+        <span>🔁</span><span id="autoText">Đang Tự Động Chạy</span>
+      </button>
+      <button class="btn btn-custom" id="customBtn" onclick="toggleCustomPanel()">
+        <span>🎨</span><span>Tùy Chỉnh Chữ</span>
+      </button>
+    </div>
+
+    <!-- BẢNG TÙY CHỈNH -->
+    <section class="custom-panel" id="customPanel">
+      <div class="cp-head">
+        <h3>🎨 Tùy Chỉnh Thiệp</h3>
+        <span class="cp-hint">Sửa tới đâu thiệp đổi tới đó • Tự lưu trên trình duyệt này</span>
+      </div>
+
+      <div class="cp-section">
+        <h4>✉️ Nội dung thiệp</h4>
+        <div class="cp-grid">
+          <div class="cp-field full"><label>Dòng "Thân gửi"</label><input type="text" data-bind="content.to"></div>
+          <div class="cp-field full"><label>Các lời chúc tự động chạy (mỗi dòng 1 câu, sẽ lần lượt gõ ra)</label>
+            <textarea rows="5" data-bind="content.messages"></textarea></div>
+          <div class="cp-field full"><label>Bài thơ (mỗi dòng một câu)</label><textarea rows="4" data-bind="content.poem"></textarea></div>
+          <div class="cp-field full"><label>Câu chúc nổi bật dưới bài thơ</label><input type="text" data-bind="content.wish"></div>
+          <div class="cp-field full"><label>Đoạn kết</label><textarea rows="3" data-bind="content.closing"></textarea></div>
+          <div class="cp-field"><label>Câu dẫn chữ ký</label><input type="text" data-bind="content.role"></div>
+          <div class="cp-field"><label>Tên người gửi</label><input type="text" data-bind="content.name"></div>
+        </div>
+      </div>
+
+      <div class="cp-section">
+        <h4>🔤 Kiểu chữ</h4>
+        <div class="cp-grid">
+          <div class="cp-field"><label>Phông chữ lời chúc</label><select data-bind="style.msgFont" data-fonts="1"></select></div>
+          <div class="cp-field"><label>Cỡ chữ lời chúc <span class="cp-val" data-val="style.msgSize" data-unit="px"></span></label>
+            <input type="range" min="12" max="30" step="1" data-bind="style.msgSize"></div>
+          <div class="cp-field"><label>Màu chữ lời chúc</label><input type="color" data-bind="style.msgColor"></div>
+          <div class="cp-field"><label>Căn lề</label>
+            <select data-bind="style.msgAlign">
+              <option value="left">Căn trái</option><option value="center">Căn giữa</option>
+              <option value="right">Căn phải</option><option value="justify">Căn đều hai bên</option>
+            </select></div>
+          <div class="cp-field"><label>Kiểu nhấn</label>
+            <div class="cp-check">
+              <label><input type="checkbox" data-bind="style.msgBold"> In đậm</label>
+              <label><input type="checkbox" data-bind="style.msgItalic"> In nghiêng</label>
+            </div></div>
+          <div class="cp-field"><label>Tốc độ gõ chữ <span class="cp-val" data-val="style.speed" data-unit=" ms/chữ"></span></label>
+            <input type="range" min="5" max="120" step="5" data-bind="style.speed"></div>
+          <div class="cp-field"><label>Phông tiêu đề & chữ ký</label><select data-bind="style.titleFont" data-fonts="1"></select></div>
+          <div class="cp-field"><label>Cỡ tiêu đề <span class="cp-val" data-val="style.titleSize" data-unit="px"></span></label>
+            <input type="range" min="20" max="56" step="1" data-bind="style.titleSize"></div>
+          <div class="cp-field"><label>Màu tiêu đề & chữ ký</label><input type="color" data-bind="style.titleColor"></div>
+        </div>
+      </div>
+
+      <div class="cp-section">
+        <h4>📣 Tiêu đề trang, dải chữ chạy & mã QR</h4>
+        <div class="cp-grid">
+          <div class="cp-field full"><label>Dòng huy hiệu nhỏ phía trên</label><input type="text" data-bind="header.badge"></div>
+          <div class="cp-field"><label>Tiêu đề lớn</label><input type="text" data-bind="header.title"></div>
+          <div class="cp-field"><label>Chữ nhấn màu (vd 20/10)</label><input type="text" data-bind="header.date"></div>
+          <div class="cp-field full"><label>Dòng phụ đề</label><input type="text" data-bind="header.subtitle"></div>
+          <div class="cp-field full"><label>Dải chữ chạy trên cùng (mỗi dòng 1 câu, trước dấu ":" sẽ in đậm)</label>
+            <textarea rows="4" data-bind="banner"></textarea></div>
+          <div class="cp-field full"><label>Dải chữ chạy cuối trang (mỗi dòng 1 câu)</label>
+            <textarea rows="3" data-bind="footerBanner"></textarea></div>
+          <div class="cp-field full"><label>Tiêu đề khu thẻ may mắn</label><input type="text" data-bind="lucky.title"></div>
+          <div class="cp-field full"><label>Lời chúc trong 4 thẻ may mắn (mỗi dòng 1 thẻ)</label>
+            <textarea rows="4" data-bind="lucky.items"></textarea></div>
+          <div class="cp-field full"><label>Chữ cuối trang</label><input type="text" data-bind="footer.text"></div>
+          <div class="cp-field full"><label>Liên kết để tạo mã QR (để trống = dùng link trang hiện tại)</label>
+            <input type="text" data-bind="qr.link" placeholder="https://..."></div>
+        </div>
+      </div>
+
+      <div class="cp-actions">
+        <button class="cp-btn primary" onclick="replayNow()">✍️ Xem lại chữ chạy</button>
+        <button class="cp-btn danger" id="resetBtn" onclick="resetCustom()">↺ Khôi phục nội dung gốc</button>
+        <button class="cp-btn" onclick="toggleCustomPanel()">Đóng bảng</button>
+      </div>
+    </section>
+
+    <main class="card-wrapper">
+      <div class="envelope-box">
+        <span class="corner-decor corner-tl">🌸</span>
+        <span class="corner-decor corner-tr">🌺</span>
+        <span class="corner-decor corner-bl">🌼</span>
+        <span class="corner-decor corner-br">🌷</span>
+
+        <div class="typing-status-bar">
+          <div><span class="typing-indicator"></span><span id="typingStatusLabel">Đang nắn nót gõ từng nét chữ chúc mừng...</span></div>
+          <a href="javascript:void(0)" onclick="skipTyping()" style="color:#e11d48;text-decoration:none;">Xem nhanh ⚡</a>
+        </div>
+
+        <h2 class="recipient-title" id="cTo"></h2>
+        <p class="typewriter-text" id="cMessage"><span class="text-holder"></span><span class="blinking-cursor"></span></p>
+
+        <div class="poem-box" id="cPoemBox">
+          <div id="cPoemLines"></div>
+          <div class="poem-wish" id="cWish"></div>
+        </div>
+
+        <p class="typewriter-text" id="cClosing" style="min-height:auto;margin-bottom:0;"></p>
+
+        <div class="signature-area">
+          <div class="signature-role" id="cRole"></div>
+          <div class="signature-name" id="cName"></div>
+        </div>
+      </div>
+
+      <section class="lucky-section">
+        <h3 class="lucky-title" id="luckyTitle"></h3>
+        <div class="lucky-grid">
+          <div class="lucky-card" onclick="revealLucky(this)"><div class="lucky-icon">🌟</div><div class="lucky-text">May Mắn Số 1</div><div class="lucky-reveal" id="luckyR0"></div></div>
+          <div class="lucky-card" onclick="revealLucky(this)"><div class="lucky-icon">💖</div><div class="lucky-text">May Mắn Số 2</div><div class="lucky-reveal" id="luckyR1"></div></div>
+          <div class="lucky-card" onclick="revealLucky(this)"><div class="lucky-icon">📖</div><div class="lucky-text">May Mắn Số 3</div><div class="lucky-reveal" id="luckyR2"></div></div>
+          <div class="lucky-card" onclick="revealLucky(this)"><div class="lucky-icon">🍀</div><div class="lucky-text">May Mắn Số 4</div><div class="lucky-reveal" id="luckyR3"></div></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footBanner" class="marquee-wrap" style="margin:30px auto;border-radius:50px;background:rgba(255,255,255,.8);border:1px solid #fecdd3;padding:10px 0;">
+      <div class="marquee-track" id="footTrack">
+        <div class="marquee-content" id="footMarqueeA" style="color:#9f1239;font-size:13px;"></div>
+        <div class="marquee-content" id="footMarqueeB" style="color:#9f1239;font-size:13px;" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <footer><p id="footText"></p></footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <div id="giftModal" class="gift-modal" onclick="closeGiftModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-flower-icon">💐🌹🌷</div>
+      <h3 class="modal-title">Bó Hoa 999 Đóa Hồng Dành Tặng!</h3>
+      <p class="modal-desc">Xin gửi tặng những bông hoa tươi thắm nhất cùng sự biết ơn và tình cảm chân thành nhất. Chúc cho những ngày sắp tới của bạn luôn ngát hương thơm và tràn ngập niềm vui!</p>
+      <button class="modal-close-btn" onclick="closeGiftModal()">Nhận Hoa & Cảm Ơn 💖</button>
+    </div>
+  </div>
+
+<script>
+  const DEFAULTS = {
+    header: {
+      badge: '✨ 20 Tháng 10 - Ngày Phụ Nữ Việt Nam ✨',
+      title: 'Mừng Ngày Phụ Nữ Việt Nam',
+      date: '20/10',
+      subtitle: 'Gửi trọn yêu thương và những lời chúc ngọt ngào nhất đến các bạn nữ'
+    },
+    banner: [
+      '💐 Chúc Các Bạn Nữ: Luôn xinh đẹp rạng rỡ, học giỏi, may mắn và nhận thật nhiều hoa quà!',
+      '✨ Phái Đẹp Tỏa Sáng: Mãi là đóa hoa thơm ngát và niềm tự hào của cả lớp chúng ta!',
+      '🌹 20 Tháng 10 Ngập Tràn Yêu Thương: Chúc một nửa thế giới luôn hạnh phúc!',
+      '🌸 Gửi Đến Các Nàng: Xinh đẹp, dịu dàng và tràn đầy sức sống!'
+    ].join('\n'),
+    footerBanner: [
+      '🌸 20/10 Ngập Tràn Hoa Tươi',
+      '💐 Chúc Bạn Nữ Luôn Xinh Đẹp Tỏa Sáng',
+      '🍀 Hạnh Phúc - May Mắn - Thành Công',
+      '✨ Yêu Thương & Tôn Vinh Phái Đẹp'
+    ].join('\n'),
+    content: {
+      to: 'Thân gửi: Các Bạn Nữ Xinh Đẹp Của Chúng Ta 🌸',
+      messages: [
+        'Nhân ngày 20/10, xin gửi ngàn lời chúc ngọt ngào và rực rỡ nhất tới tất cả các bạn nữ xinh đẹp của chúng ta! Cảm ơn các bạn vì luôn mang đến sự tươi vui, dịu dàng và nguồn năng lượng tích cực tuyệt vời cho lớp học mỗi ngày.',
+        'Chúc các bạn nữ luôn tự tin tỏa sáng, theo đuổi những ước mơ của riêng mình và luôn giữ được nụ cười rạng rỡ trên môi mỗi ngày.',
+        'Mong rằng hành trình phía trước của các bạn sẽ luôn ngập tràn hoa thơm, may mắn và thật nhiều điều tốt đẹp đang chờ đón.'
+      ].join('\n'),
+      poem: [
+        '"Mùng 20 tháng 10 này,',
+        'Chúc cho các bạn gái ngày càng xinh.',
+        'Học giỏi, duyên dáng, thông minh,',
+        'Luôn luôn rạng rỡ lung linh nụ cười!"'
+      ].join('\n'),
+      wish: '💖 Chúc các bạn nhận thật nhiều hoa, quà và mãi là đóa hoa rực rỡ nhất!',
+      closing: 'Chúc các bạn nữ luôn tự tin theo đuổi ước mơ, kiểm tra toàn điểm 10, túi lúc nào cũng rủng rỉnh tiền và lúc nào cũng được yêu thương chiều chuộng hết mực nha!',
+      role: 'Thân ái gửi tặng,',
+      name: 'Tập Thể Lớp Chúng Em'
+    },
+    lucky: {
+      title: '✨ Chạm Vào Từng Ngôi Sao Để Mở Lời Chúc May Mắn ✨',
+      items: [
+        '🌸 Luôn Xinh Đẹp & Trẻ Trung!',
+        '🎁 Ngập Tràn Quà Tặng 20/10!',
+        '💯 Học Giỏi, Công Việc Thuận Lợi!',
+        '🥰 Bình An, Hạnh Phúc Trọn Vẹn!'
+      ].join('\n')
+    },
+    footer: { text: '💐 Chúc mừng ngày Phụ nữ Việt Nam 20-10 | Dành tặng những đóa hoa xinh đẹp nhất của lớp 💖' },
+    qr: { link: '' },
+    style: {
+      msgFont: 'quicksand', msgSize: 16, msgColor: '#4b5563', msgAlign: 'justify',
+      msgBold: false, msgItalic: false, speed: 25,
+      titleFont: 'dancing', titleSize: 36, titleColor: '#be123c'
+    }
+  };
+
+  const FONTS = {
+    quicksand: { label: 'Quicksand (mềm mại)', css: "'Quicksand', sans-serif" },
+    bevietnam: { label: 'Be Vietnam Pro (hiện đại)', css: "'Be Vietnam Pro', sans-serif" },
+    mali: { label: 'Mali (viết tay)', css: "'Mali', cursive" },
+    playfair: { label: 'Playfair Display (sang trọng)', css: "'Playfair Display', Georgia, serif" },
+    dancing: { label: 'Dancing Script (thư pháp)', css: "'Dancing Script', cursive" },
+    pacifico: { label: 'Pacifico (bay bổng)', css: "'Pacifico', cursive" }
+  };
+
+  const STORAGE_KEY = 'thiep-20-10-girls-v1';
+  const $ = (id) => document.getElementById(id);
+
+  function loadState() {
+    const st = JSON.parse(JSON.stringify(DEFAULTS));
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        for (const g in st) {
+          if (saved[g] === undefined) continue;
+          if (typeof st[g] === 'object') Object.assign(st[g], saved[g]);
+          else st[g] = saved[g];
+        }
+      }
+    } catch (e) {}
+    return st;
+  }
+  function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+  let state = loadState();
+  let opened = false;
+  let isAutoplay = true;
+  let msgIndex = 0;
+  let typeTimer = null;
+  let loopTimer = null;
+  let charIndex = 0;
+
+  function getVal(path) { return path.split('.').reduce((o, k) => o[k], state); }
+  function setVal(path, v) { const p = path.split('.'); const last = p.pop(); p.reduce((o, k) => o[k], state)[last] = v; }
+
+  // ---------- Mã QR (tạo ngay trong trình duyệt, không cần ảnh từ máy chủ ngoài) ----------
+  // Nếu file được mở trực tiếp (file://) thì không có link web thật để quét,
+  // lúc đó mã QR sẽ tự dùng link trang web đã xuất bản dưới đây làm dự phòng.
+  const PUBLISHED_URL = 'https://claude.ai/artifact/TbzQLqPTtXNAj8h7ioytuV';
+  function buildQr() {
+    let link = state.qr.link.trim();
+    if (!link) link = (typeof location !== 'undefined' && /^https?:/.test(location.href)) ? location.href : PUBLISHED_URL;
+    const box = $('qrBox');
+    box.innerHTML = '<div class="qr-ring"></div><div id="qrRender"></div>';
+    try {
+      new QRCode(document.getElementById('qrRender'), {
+        text: link, width: 200, height: 200,
+        colorDark: '#be123c', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch (e) {
+      box.innerHTML = '<div class="qr-ring"></div><div class="qr-fallback">💌</div>';
+    }
+  }
+
+  // ---------- Dải chữ chạy ----------
+  function buildMarquee(prefix, text, boldBeforeColon, pxPerSec) {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    const wrapper = $(prefix + 'Banner');
+    wrapper.style.display = lines.length ? '' : 'none';
+    const A = $(prefix + 'MarqueeA'), B = $(prefix + 'MarqueeB'), track = $(prefix + 'Track');
+    A.innerHTML = ''; B.innerHTML = '';
+    if (!lines.length) return;
+    const addLines = (box) => lines.forEach(line => {
+      const span = document.createElement('span');
+      if (boldBeforeColon) span.className = 'marquee-item';
+      const i = line.indexOf(':');
+      if (boldBeforeColon && i > 0) {
+        const strong = document.createElement('strong');
+        strong.textContent = line.slice(0, i);
+        span.append(strong, document.createTextNode(line.slice(i)));
+      } else { span.textContent = line; }
+      box.appendChild(span);
+    });
+    addLines(A);
+    let guard = 0;
+    while (A.scrollWidth < window.innerWidth + 50 && guard++ < 12) addLines(A);
+    B.innerHTML = A.innerHTML;
+    track.style.animation = 'marqueeRun ' + Math.max(8, A.scrollWidth / pxPerSec) + 's linear infinite';
+  }
+  function buildMarquees() { buildMarquee('top', state.banner, true, 70); buildMarquee('foot', state.footerBanner, false, 50); }
+
+  // ---------- Kiểu chữ ----------
+  function applyStyle() {
+    const st = state.style, r = document.documentElement.style;
+    r.setProperty('--msg-font', (FONTS[st.msgFont] || FONTS.quicksand).css);
+    r.setProperty('--msg-size', st.msgSize + 'px');
+    r.setProperty('--msg-color', st.msgColor);
+    r.setProperty('--msg-align', st.msgAlign);
+    r.setProperty('--msg-weight', st.msgBold ? '700' : '500');
+    r.setProperty('--msg-style', st.msgItalic ? 'italic' : 'normal');
+    r.setProperty('--title-font', (FONTS[st.titleFont] || FONTS.dancing).css);
+    r.setProperty('--title-size', st.titleSize + 'px');
+    r.setProperty('--title-color', st.titleColor);
+  }
+
+  // ---------- Đổ nội dung tĩnh ----------
+  function applyStatic() {
+    $('hdrBadge').textContent = state.header.badge;
+    $('h1Title').textContent = state.header.title;
+    $('h1Date').textContent = state.header.date;
+    $('hdrSub').textContent = state.header.subtitle;
+    $('footText').textContent = state.footer.text;
+    $('luckyTitle').textContent = state.lucky.title;
+    const items = state.lucky.items.split('\n');
+    for (let i = 0; i < 4; i++) $('luckyR' + i).textContent = (items[i] || '').trim();
+
+    const c = state.content;
+    $('cTo').textContent = c.to;
+    const lines = $('cPoemLines'); lines.innerHTML = '';
+    c.poem.split('\n').filter(l => l.trim()).forEach(l => { const d = document.createElement('div'); d.textContent = l; lines.appendChild(d); });
+    $('cWish').textContent = c.wish;
+    $('cPoemBox').style.display = (c.poem.trim() || c.wish.trim()) ? '' : 'none';
+    $('cClosing').textContent = c.closing;
+    $('cClosing').style.display = c.closing.trim() ? '' : 'none';
+    $('cRole').textContent = c.role;
+    $('cName').textContent = c.name;
+
+    applyStyle();
+    buildQr();
+  }
+
+  // ---------- Gõ chữ chạy (có tự động chạy lần lượt nhiều lời chúc) ----------
+  function getMessages() {
+    const arr = state.content.messages.split('\n').map(l => l.trim()).filter(Boolean);
+    return arr.length ? arr : [''];
+  }
+  function holder() { return document.querySelector('#cMessage .text-holder'); }
+  function stopTyping() { if (typeTimer) { clearInterval(typeTimer); typeTimer = null; } if (loopTimer) { clearTimeout(loopTimer); loopTimer = null; } }
+
+  function startTypewriter() {
+    stopTyping();
+    charIndex = 0;
+    const msgs = getMessages();
+    if (msgIndex >= msgs.length) msgIndex = 0;
+    const fullText = msgs[msgIndex];
+    const el = holder();
+    const statusLabel = $('typingStatusLabel');
+    if (!el) return;
+    el.textContent = '';
+    if (!fullText) { if (statusLabel) statusLabel.innerText = 'Chưa có lời chúc nào được nhập'; return; }
+    if (statusLabel) statusLabel.innerText = 'Đang nắn nót gõ từng nét chữ chúc mừng...';
+
+    typeTimer = setInterval(() => {
+      charIndex++;
+      el.textContent = fullText.slice(0, charIndex);
+      if (charIndex >= fullText.length) {
+        clearInterval(typeTimer); typeTimer = null;
+        if (statusLabel) statusLabel.innerText = 'Đã hoàn tất bức thư 💌';
+        if (isAutoplay) {
+          loopTimer = setTimeout(() => { msgIndex = (msgIndex + 1) % getMessages().length; startTypewriter(); }, 2600);
+        }
+      }
+    }, Math.max(5, state.style.speed));
+  }
+
+  function skipTyping() {
+    stopTyping();
+    const el = holder();
+    const msgs = getMessages();
+    if (el) el.textContent = msgs[msgIndex] || '';
+    $('typingStatusLabel').innerText = 'Đã hoàn tất bức thư 💌';
+    if (isAutoplay) loopTimer = setTimeout(() => { msgIndex = (msgIndex + 1) % getMessages().length; startTypewriter(); }, 2600);
+  }
+
+  function replayNow() { startTypewriter(); }
+
+  function toggleAutoplay() {
+    isAutoplay = !isAutoplay;
+    updateAutoBtn();
+    if (isAutoplay && !typeTimer && !loopTimer) {
+      msgIndex = (msgIndex + 1) % getMessages().length;
+      startTypewriter();
+    } else if (!isAutoplay && loopTimer) {
+      clearTimeout(loopTimer); loopTimer = null;
+    }
+  }
+  function updateAutoBtn() {
+    const btn = $('autoBtn'), txt = $('autoText');
+    btn.classList.toggle('on', isAutoplay);
+    txt.textContent = isAutoplay ? 'Đang Tự Động Chạy' : 'Tự Động Chạy';
+  }
+
+  // ---------- Thẻ may mắn ----------
+  function revealLucky(el) { el.classList.toggle('revealed'); }
+
+  // ---------- Modal quà ----------
+  function openGiftModal() { $('giftModal').classList.add('active'); }
+  function closeGiftModal() { $('giftModal').classList.remove('active'); }
+
+  // ---------- Nhạc chill lo-fi không lời (tự tổng hợp, không dùng nhạc có bản quyền) ----------
+  let audioCtx = null, isPlaying = false, schedTimer = null, bus = null, noiseBuf = null, nextTime = 0, stepIdx = 0;
+  const BPM = 86, STEP = 60 / BPM / 2;
+  const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
+  const PROG = [
+    { bass: 36, chord: [60, 64, 67, 71] },
+    { bass: 33, chord: [57, 60, 64, 67] },
+    { bass: 38, chord: [62, 65, 69, 72] },
+    { bass: 31, chord: [59, 62, 65, 67] }
+  ];
+  const PENTA = [67, 69, 72, 74, 76, 79, 81];
+
+  function buildBus() {
+    const c = audioCtx, now = c.currentTime;
+    const out = c.createGain();
+    out.gain.setValueAtTime(0.0001, now);
+    out.gain.linearRampToValueAtTime(0.55, now + 1.2);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200; lp.Q.value = 0.5;
+    lp.connect(out); out.connect(c.destination);
+
+    const echo = c.createDelay(1.5); echo.delayTime.value = (60 / BPM) * 0.75;
+    const fb = c.createGain(); fb.gain.value = 0.35;
+    const ef = c.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.value = 1700;
+    echo.connect(ef); ef.connect(fb); fb.connect(echo); ef.connect(lp);
+    const send = c.createGain(); send.gain.value = 0.4; send.connect(echo);
+
+    const crackle = c.createBufferSource();
+    crackle.buffer = noiseBuf; crackle.loop = true;
+    const cf = c.createBiquadFilter(); cf.type = 'bandpass'; cf.frequency.value = 2500; cf.Q.value = 0.6;
+    const cg = c.createGain(); cg.gain.value = 0.006;
+    crackle.connect(cf); cf.connect(cg); cg.connect(out);
+    crackle.start();
+
+    return { out, lp, send, crackle };
+  }
+
+  function tone(freq, t, dur, vol, type, opts) {
+    opts = opts || {};
+    const c = audioCtx, osc = c.createOscillator(), env = c.createGain();
+    osc.type = type || 'sine'; osc.frequency.setValueAtTime(freq, t);
+    if (opts.detune) osc.detune.value = opts.detune;
+    const atk = opts.attack || 0.02;
+    env.gain.setValueAtTime(0.0001, t);
+    env.gain.linearRampToValueAtTime(vol, t + atk);
+    env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(env); env.connect(bus.lp);
+    if (opts.echo) env.connect(bus.send);
+    osc.start(t); osc.stop(t + dur + 0.05);
+  }
+  function noiseHit(t, dur, vol, type, freq) {
+    const c = audioCtx, src = c.createBufferSource();
+    src.buffer = noiseBuf;
+    const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+    const g = c.createGain();
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f); f.connect(g); g.connect(bus.out);
+    src.start(t, Math.random() * 0.5); src.stop(t + dur + 0.02);
+  }
+  function kick(t) {
+    const c = audioCtx, osc = c.createOscillator(), g = c.createGain();
+    osc.frequency.setValueAtTime(130, t); osc.frequency.exponentialRampToValueAtTime(45, t + 0.18);
+    g.gain.setValueAtTime(0.33, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+    osc.connect(g); g.connect(bus.out); osc.start(t); osc.stop(t + 0.35);
+  }
+
+  function scheduleStep(i, t) {
+    const s = i % 8, bar = Math.floor(i / 8) % PROG.length, p = PROG[bar];
+    const swing = (s % 2 === 1) ? STEP * 0.18 : 0;
+    const tt = t + swing;
+
+    if (s === 0 || s === 5) {
+      const v = s === 0 ? 0.07 : 0.045;
+      p.chord.forEach((m, k) => {
+        const st = tt + k * 0.03;
+        tone(mtof(m), st, 2.2, v, 'sine', { detune: k % 2 ? 5 : -5, echo: true });
+        tone(mtof(m) * 2, st, 0.8, v * 0.3, 'triangle');
+      });
+    }
+    if (s === 0) p.chord.forEach((m) => tone(mtof(m - 12), tt, 3.6, 0.02, 'triangle', { attack: 0.9 }));
+    if (s === 0 || s === 3 || s === 6) tone(mtof(p.bass + 12), tt, 0.9, s === 0 ? 0.19 : 0.12, 'sine');
+    if ((s === 1 || s === 4 || s === 7) && Math.random() < 0.55) {
+      const m = PENTA[Math.floor(Math.random() * PENTA.length)];
+      tone(mtof(m), tt, 1.3, 0.055, 'sine', { echo: true });
+      tone(mtof(m) * 2, tt, 0.45, 0.015, 'triangle', { echo: true });
+    }
+    if (s === 0 || s === 5) kick(tt);
+    if (s === 2 || s === 6) noiseHit(tt, 0.13, 0.065, 'bandpass', 1800);
+    if (s % 2 === 1) noiseHit(tt, 0.04, 0.022, 'highpass', 7500);
+  }
+
+  function scheduler() {
+    if (!isPlaying) return;
+    while (nextTime < audioCtx.currentTime + 0.25) { scheduleStep(stepIdx, nextTime); nextTime += STEP; stepIdx++; }
+  }
+
+  function startMusic() {
+    if (isPlaying) return;
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    isPlaying = true; bus = buildBus(); stepIdx = 0; nextTime = audioCtx.currentTime + 0.15;
+    schedTimer = setInterval(scheduler, 60); scheduler();
+    $('musicBtn').classList.add('playing'); $('musicText').innerText = 'Đang Phát Nhạc 🎶';
+  }
+  function stopMusic() {
+    if (!isPlaying) return;
+    isPlaying = false; clearInterval(schedTimer);
+    const old = bus, now = audioCtx.currentTime;
+    old.out.gain.cancelScheduledValues(now); old.out.gain.setValueAtTime(old.out.gain.value, now);
+    old.out.gain.linearRampToValueAtTime(0.0001, now + 0.6);
+    setTimeout(() => { try { old.crackle.stop(); old.out.disconnect(); } catch (e) {} }, 4000);
+    $('musicBtn').classList.remove('playing'); $('musicText').innerText = 'Bật Nhạc Chill';
+  }
+  function toggleMusic() { if (isPlaying) stopMusic(); else startMusic(); }
+
+  // ---------- Cánh hoa bay ----------
+  const canvas = $('petalCanvas'), ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth, height = canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; buildMarquees(); });
+  const petals = []; const petalCount = 35;
+  class Petal {
+    constructor() { this.reset(true); }
+    reset(initial) {
+      this.x = Math.random() * width; this.y = initial ? Math.random() * height : -20;
+      this.size = Math.random() * 12 + 10; this.speedX = Math.random() * 2 - 1; this.speedY = Math.random() * 1.5 + 1.2;
+      this.rotation = Math.random() * Math.PI * 2; this.rotSpeed = (Math.random() - 0.5) * 0.04;
+      this.opacity = Math.random() * 0.5 + 0.4;
+      this.color = Math.random() > 0.4 ? 'rgba(244, 63, 94, ' : 'rgba(251, 113, 133, ';
+    }
+    update() {
+      this.x += this.speedX + Math.sin(this.y * 0.01) * 0.8; this.y += this.speedY; this.rotation += this.rotSpeed;
+      if (this.y > height + 20 || this.x < -20 || this.x > width + 20) this.reset(false);
+    }
+    draw() {
+      ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation); ctx.beginPath(); ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size, 0, 0, this.size);
+      ctx.bezierCurveTo(-this.size, 0, -this.size / 2, -this.size / 2, 0, 0);
+      ctx.fillStyle = this.color + this.opacity + ')'; ctx.fill(); ctx.restore();
+    }
+  }
+  for (let i = 0; i < petalCount; i++) petals.push(new Petal());
+  function animate() { ctx.clearRect(0, 0, width, height); petals.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+  animate();
+
+  // ---------- Bảng tùy chỉnh ----------
+  function fillFontSelects() {
+    document.querySelectorAll('select[data-fonts]').forEach(sel => {
+      sel.innerHTML = '';
+      Object.keys(FONTS).forEach(k => {
+        const o = document.createElement('option'); o.value = k; o.textContent = FONTS[k].label; o.style.fontFamily = FONTS[k].css;
+        sel.appendChild(o);
+      });
+    });
+  }
+  function syncForm() {
+    document.querySelectorAll('[data-bind]').forEach(el => {
+      const v = getVal(el.dataset.bind);
+      if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+    });
+    document.querySelectorAll('[data-val]').forEach(el => { el.textContent = getVal(el.dataset.val) + (el.dataset.unit || ''); });
+  }
+  function onFormInput(e) {
+    const el = e.target, path = el.dataset && el.dataset.bind;
+    if (!path) return;
+    let v;
+    if (el.type === 'checkbox') v = el.checked; else if (el.type === 'range') v = Number(el.value); else v = el.value;
+    setVal(path, v);
+    const valEl = document.querySelector('[data-val="' + path + '"]');
+    if (valEl) valEl.textContent = v + (valEl.dataset.unit || '');
+    if (path === 'content.messages') { msgIndex = 0; stopTyping(); startTypewriter(); }
+    else if (path.startsWith('banner') || path.startsWith('footerBanner')) buildMarquees();
+    else if (path === 'qr.link') buildQr();
+    applyStatic();
+    saveState();
+  }
+  function toggleCustomPanel() {
+    const panel = $('customPanel'); const open = panel.classList.toggle('open');
+    $('customBtn').classList.toggle('active', open);
+    if (open) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  let resetArmed = null;
+  function resetCustom() {
+    const btn = $('resetBtn');
+    if (!resetArmed) { btn.textContent = 'Bấm lần nữa để xác nhận'; resetArmed = setTimeout(() => { btn.textContent = '↺ Khôi phục nội dung gốc'; resetArmed = null; }, 3000); return; }
+    clearTimeout(resetArmed); resetArmed = null; btn.textContent = '↺ Khôi phục nội dung gốc';
+    state = JSON.parse(JSON.stringify(DEFAULTS));
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    msgIndex = 0; applyStatic(); syncForm(); buildMarquees(); startTypewriter();
+  }
+
+  // ---------- Mở thiệp từ cổng QR ----------
+  function openCard() {
+    if (opened) return;
+    opened = true;
+    $('qrGate').classList.add('gate-hide');
+    setTimeout(() => { $('qrGate').style.display = 'none'; }, 650);
+    buildMarquees();
+    updateAutoBtn();
+    startTypewriter();
+    startMusic();
+  }
+
+  // ---------- Khởi tạo ----------
+  fillFontSelects();
+  applyStatic();
+  syncForm();
+  updateAutoBtn();
+  $('customPanel').addEventListener('input', onFormInput);
+  $('customPanel').addEventListener('change', onFormInput);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (opened) buildMarquees(); });
+</script>
+</body>
+</html>
